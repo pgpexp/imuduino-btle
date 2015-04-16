@@ -100,8 +100,9 @@ angular.module('starter', ['ionic', 'nRF8001'])
         currentDevice = device;
         
         currentDevice.disconnect();
+        console.log("\n\n\t\t **** DISCONNECT **** \n\n");
         
-        $scope.$apply();
+        // $scope.$apply();
       }
       // This method is called when the ionic framework has loaded.
       // This is the safest way to bind the UART callbacks, so that we
@@ -124,7 +125,6 @@ angular.module('starter', ['ionic', 'nRF8001'])
            * @todo We can do something with the data
            * For now, we can add it to our history list
            */
-          
           $scope.history = [ 'Read (Rx): ' + data ];
 
           $scope.$digest(); // Manually get the AngularJS bindings to update

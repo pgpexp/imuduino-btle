@@ -117,7 +117,7 @@ angular.module('nRF8001', ['ionic'])
                 }
               );
               
-              self.scope.$apply();
+              // self.scope.$apply();
             }
           },
           function(errorCode) {
