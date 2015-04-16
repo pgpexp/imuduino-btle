@@ -11,21 +11,24 @@
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
-    <script src="lib/jquery.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-    <script src="lib/ng-cordova.js"></script>
+
+    <!-- ngCordova plugin -->
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+
+    <!-- Nordic nRF8001 Wrapper -->
+    <script src="lib/nRF8001/UART.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-
-    <script src="lib/nRF8001/UART.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
   <body ng-app="starter" ng-controller="MainCtrl">
+
     <div class="bar bar-header bar-dark">
       <h1 class="title">BLE "UART" Example</h1>
     </div>
@@ -46,7 +49,7 @@
 
           </div>
           <div class="col-50">
-            <button ng-click="connect(device)" ng-class="{'button': true, 'button-small': true, 'button-balanced': true, 'ion-toggle': !device.isConnected, 'ion-toggle-filled': device.isConnected, 'disabled': device.isConnected}">&nbsp;Connect</button>
+            <button ng-click="device.isConnected ? disconnect(device) : connect(device)" ng-class="{'button': true, 'button-small': true, 'button-balanced': true, 'ion-toggle': !device.isConnected, 'ion-toggle-filled': device.isConnected}">&nbsp;Connect</button>
           </div>
         </div>
 

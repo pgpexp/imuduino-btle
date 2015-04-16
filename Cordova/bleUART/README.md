@@ -93,3 +93,28 @@ git clone https://github.com/zrecommerce/imuduino-btle.git
 ```
 
 The sample bleUART project is located in the Cordova/bleUART/ folder. You may view and edit the HTML and script files in the Cordova/bleUART/www folder.
+
+
+Note, after creating a new Ionic project, you may need to run the following from within the Ionic project folder:
+
+```
+chmod +x hooks/after_prepare/010_add_platform_class.js
+```
+...Otherwise, trying to add a platform will fail (file isn't executable by default).
+
+Note, when running the example ionic apps, you may need to add the 'android' or 'ios' platforms
+```
+ionic platform add android [ios]
+```
+
+Note, to install the evothings cordova plugin, run the following from within the Ionic project folder:
+
+```
+ionic plugin add com.evothings.ble
+```
+
+To upload the Ionic app to Android devices, connect a USB cable, enable USB debugging on your Android device, then run the following from within your Ionic project:
+
+```
+ionic run android
+```
