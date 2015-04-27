@@ -1,0 +1,18 @@
+@import "style/ui/bourbon/bourbon";
+@import "style/ui/neat/neat";
+@import "style/ui/base/base";
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+@import "style/ui/patterns.scss";
+@import "style/ui/components.scss";
+
+#actions {
+	@include outer-container;
+
+	#btnStartScanning  { @include span-columns(4); }
+	#btnStopScanning { @include span-columns(4); }
+	#btnPurge { @include span-columns(4); }
+}

@@ -1,0 +1,58 @@
+<head>
+  <title>meteor-ble-uart</title>
+</head>
+
+<body>
+  <h1>MeteorJS + Noble + IMUduino</h1>
+  <div id="actions">
+	  <button id="btnStartScanning">Start Scanning</button>
+	  <button id="btnStopScanning">Stop Scanning</button>
+	  <button id="btnPurge">Purge</button>
+  </div>
+
+  <table class="tables">
+    <thead>
+    	<tr>
+    		<th>BLE Peripherals</th>
+    	</tr>
+    </thead>
+    <tbody>
+	  {{# each peripherals}}
+	    {{> peripheral}}
+	  {{/each}}
+    </tbody>
+  </table>
+</body>
+
+<template name="peripheral">
+  <tr>
+  	<td>
+  		<h2>{{advertisement.localName}}</h2>
+      <p>{{uuid}}</p>
+  		<div class="stats">
+  		  <ul>
+  		    <li>{{rssi}}<span>RSSI</span></li>
+  		    <li>1<span>Services</span></li>
+  		    <li>2<span>Characteristics</span></li>
+  		  </ul>
+  		</div>
+      <div>
+        <label class="label-switch">
+          <input data-uuid="{{uuid}}" class="peripheral-status" type="checkbox" {{checkIf status}} />
+          <div class="checkbox"></div>
+        </label>
+      </div>
+      
+      <div class="stats">
+        <ul>
+        {{# each yawpitchroll}}
+          <li>{{yaw}}<span>Yaw</span></li>
+          <li>{{pitch}}<span>Pitch</span></li>
+          <li>{{roll}}<span>Roll</span></li>
+        {{/each}}
+        </ul>
+      </div>
+      
+  	</td>
+  </tr>
+</template>
