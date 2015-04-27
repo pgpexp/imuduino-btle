@@ -23,8 +23,24 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.body.events({
-    'change input[name="connect"]': function () {
+  Template.peripheral.helpers({
+    checkIf: function (status) {
+      return status == 'connected' ? 'checked="checked"' : '';
+    }
+  });
+
+  Template.peripheral.events({
+    'change input.peripheral-status': function (ev, template) {
+      var uuid = ev.target.dataset.uuid;
+      var is_checked = ev.target.checked;
+      
+      if (is_checked) {
+        Meteor.call('ble:connect', uuid);
+        console.log('ischecked true, peripheral ble:connect', uuid, ', is checked? ', is_checked)
+      } else {
+        Meteor.call('ble:disconnect', uuid);
+        console.log('ischecked false, peripheral ble:disconnect', uuid, ', is checked? ', is_checked);
+      }
     }
   });
 }
@@ -55,7 +71,7 @@ if (Meteor.isServer) {
   // Start up.
   Meteor.startup(function () {
     // Clean out old records.
-    Peripherals.remove({});
+    //Peripherals.remove({});
   });
 
   // Meteor.publish('Peripherals', function () {
@@ -75,13 +91,45 @@ if (Meteor.isServer) {
     fut.return(true);
   };
 
+  var bleConnect = function (uuid, peripheral) {
+    
+    var docPeripheral = Peripherals.findOne({uuid: uuid});
+    Peripherals.update(docPeripheral._id, peripheralToJson(peripheral));
+
+    console.log('ble:connect peripheral?', peripheral);
+  };
+
+  var bleDisconnect = function (uuid, peripheral) {
+    
+    var docPeripheral = Peripherals.findOne({uuid: uuid});
+    Peripherals.update(docPeripheral._id, peripheralToJson(peripheral));
+
+    console.log('ble:disconnect peripheral?', peripheral);
+  };
+
+  var findPeripheralByUUID = function (uuid, cb) {
+    var Peripheral = peripheralObjects[uuid];
+    
+    if (!Peripheral) {
+      // Try and find it again.
+      console.log('attempting to find ' + uuid);
+      noble.startScanning();
+
+    } else {
+      cb( Peripheral );
+    }
+  };
+
   var bleDiscoverBound = Meteor.bindEnvironment(bleDiscover);
+  var bleConnectBound = Meteor.bindEnvironment(bleConnect);
+  var bleDisconnectBound = Meteor.bindEnvironment(bleDisconnect);
 
   Meteor.methods({
     'ble:startScanning': function () {
-      
+      Meteor.call('ble:purge');
+
       noble.startScanning();
-      console.log('on ble:stopScanning');
+      console.log('on ble:startScanning');
     },
 
     'ble:stopScanning': function () {
@@ -96,27 +144,43 @@ if (Meteor.isServer) {
 
     'ble:discover': function (peripheral) {
       check(peripheral.uuid, String);
+      var existingRecord = Peripherals.findOne({uuid: peripheral.uuid});
 
-      Peripherals.insert(peripheral);
-      console.log('ble:discover, peripheral inserted to collection', peripheral);
+      if (existingRecord) {
+        Peripherals.update(existingRecord._id, peripheral);
+        console.log('ble:discover, peripheral updated in collection', peripheral);
+      } else {
+        Peripherals.insert(peripheral);
+        console.log('ble:discover, peripheral inserted to collection', peripheral);
+      }
+      
     },
 
-    'ble:connect': function (peripheral) {
-      var Peripheral = peripheralObjects[peripheral.uuid];
-      var docPeripheral = Peripherals.findOne({uuid: peripheral.uuid});
-
-      Peripheral.connect(function (err) {
-        Peripherals.update(docPeripheral._id, peripheralToJson(Peripheral));
+    'ble:connect': function (uuid) {
+      var Peripheral = findPeripheralByUUID(uuid, function (peripheral) {
+        peripheral.connect(function () {
+          bleConnectBound(uuid, peripheral);
+        });
       });
+
+      // if (!Peripheral) {
+      //   // Try and find it again.
+      //   console.log('attempting to find ' + uuid);
+      //   noble.startScanning([uuid], false);
+      // }
+
+      
     },
 
-    'ble:disconnect': function (peripheral) {
-      var Peripheral = peripheralObjects[peripheral.uuid];
-      var docPeripheral = Peripherals.findOne({uuid: peripheral.uuid});
-
-      Peripheral.disconnect(function (err) {
-        Peripherals.update(docPeripheral._id, peripheralToJson(Peripheral));
+    'ble:disconnect': function (uuid) {
+      var Peripheral = findPeripheralByUUID(uuid, function (peripheral) {
+        console.log('disconnect ', uuid);
+        peripheral.disconnect(function () {
+          bleDisconnectBound(uuid, peripheral);
+        });
       });
+
+      
     }
 
   });

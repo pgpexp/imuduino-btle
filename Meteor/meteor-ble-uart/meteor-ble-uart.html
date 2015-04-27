@@ -27,16 +27,21 @@
 <template name="peripheral">
   <tr>
   	<td>
-  		<h2>{{uuid}}</h2>
+  		<h2>{{advertisement.localName}}</h2>
+      <p>{{uuid}}</p>
   		<div class="stats">
-		  <ul>
-		    <li>{{rssi}}<span>RSSI</span></li>
-		    <li>298<span>Things</span></li>
-		    <li>923<span>Objects</span></li>
-		    <li>98<span>More</span></li>
-		  </ul>
-		</div>
-
+  		  <ul>
+  		    <li>{{rssi}}<span>RSSI</span></li>
+  		    <li>1<span>Services</span></li>
+  		    <li>923<span>Characteristics</span></li>
+  		  </ul>
+  		</div>
+      <div>
+        <label class="label-switch">
+          <input data-uuid="{{uuid}}" class="peripheral-status" type="checkbox" {{checkIf status}} />
+          <div class="checkbox"></div>
+        </label>
+      </div>
   	</td>
   </tr>
 </template>
