@@ -9,7 +9,11 @@ if (Meteor.isClient) {
   Meteor.subscribe('peripherals');
   Meteor.subscribe('yawpitchroll');
 
-
+  YawPitchRoll.find().observeChanges({
+    added: function () {
+      console.log('YawPitchRoll observeChanges():added called');
+    }
+  });
   Template.body.events({
     'click #btnStartScanning': function () {
       Meteor.call('ble:startScanning', function () {});
@@ -34,8 +38,11 @@ if (Meteor.isClient) {
     checkIf: function (status) {
       return status == 'connected' ? 'checked="checked"' : '';
     },
+    isConnected: function (status) {
+      return status == 'connected';
+    },
     yawpitchroll: function (uuid) {
-      return YawPitchRoll.findOne({uuid: uuid}, {sort: {$natural: -1}});
+      return YawPitchRoll.find({}, {limit: 1, sort: {timestamp: -1}});
     }
   });
 
@@ -88,8 +95,8 @@ if (Meteor.isServer) {
     return Peripherals.find();
   });
 
-  Meteor.publish('yawpitchroll', function (uuid) {
-    return Peripherals.find();
+  Meteor.publish('yawpitchroll', function () {
+    return YawPitchRoll.find();
   });
 
 
@@ -163,15 +170,22 @@ if (Meteor.isServer) {
   var bleCharRX = function (uuid, data, isNotification) {
     var ascii = data.toString('ascii');
     var ypr = ascii.split('|');
-
-    YawPitchRoll.insert({
+    var existing = YawPitchRoll.findOne({uuid: uuid});
+    var yprRecord = {
       uuid: uuid,
-      yaw: ypr[0],
-      pitch: ypr[1],
-      roll: ypr[2]
-    });
+      yaw: parseFloat(ypr[0]),
+      pitch: parseFloat(ypr[1]),
+      roll: parseFloat(ypr[2]),
+      timestamp: Date.now()
+    };
+
+    if (!existing) {
+      YawPitchRoll.insert(yprRecord);
+    } else {
+      YawPitchRoll.update(existing._id, yprRecord);
+    }
     
-    console.log('RX: on data', ascii, 'isNotification', isNotification);
+    // console.log('RX: on data', ascii);
   };
 
   var findPeripheralByUUID = function (uuid, cb) {

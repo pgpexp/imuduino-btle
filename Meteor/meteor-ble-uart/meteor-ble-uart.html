@@ -33,7 +33,7 @@
   		  <ul>
   		    <li>{{rssi}}<span>RSSI</span></li>
   		    <li>1<span>Services</span></li>
-  		    <li>923<span>Characteristics</span></li>
+  		    <li>2<span>Characteristics</span></li>
   		  </ul>
   		</div>
       <div>
@@ -42,6 +42,17 @@
           <div class="checkbox"></div>
         </label>
       </div>
+      
+      <div class="stats">
+        <ul>
+        {{# each yawpitchroll}}
+          <li>{{yaw}}<span>Yaw</span></li>
+          <li>{{pitch}}<span>Pitch</span></li>
+          <li>{{roll}}<span>Roll</span></li>
+        {{/each}}
+        </ul>
+      </div>
+      
   	</td>
   </tr>
 </template>
