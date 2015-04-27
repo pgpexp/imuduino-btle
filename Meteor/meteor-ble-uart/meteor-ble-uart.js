@@ -1,7 +1,14 @@
 Peripherals = new Mongo.Collection('Peripherals');
+YawPitchRoll = new Mongo.Collection('YawPitchRoll');
+
+NORDIC_NRF8001_SERVICE_UART = '6e400001b5a3f393e0a9e50e24dcca9e'; // Custom UART service
+NORDIC_NRF8001_CHAR_TX      = '6e400002b5a3f393e0a9e50e24dcca9e'; // Write
+NORDIC_NRF8001_CHAR_RX      = '6e400003b5a3f393e0a9e50e24dcca9e'; // Read
 
 if (Meteor.isClient) {
-  Meteor.subscribe('Peripherals');
+  Meteor.subscribe('peripherals');
+  Meteor.subscribe('yawpitchroll');
+
 
   Template.body.events({
     'click #btnStartScanning': function () {
@@ -26,6 +33,9 @@ if (Meteor.isClient) {
   Template.peripheral.helpers({
     checkIf: function (status) {
       return status == 'connected' ? 'checked="checked"' : '';
+    },
+    yawpitchroll: function (uuid) {
+      return YawPitchRoll.findOne({uuid: uuid}, {sort: {$natural: -1}});
     }
   });
 
@@ -74,10 +84,13 @@ if (Meteor.isServer) {
     //Peripherals.remove({});
   });
 
-  // Meteor.publish('Peripherals', function () {
-  //   // Return all peripherals found.
-  //   return Peripherals.find();
-  // });
+  Meteor.publish('peripherals', function () {
+    return Peripherals.find();
+  });
+
+  Meteor.publish('yawpitchroll', function (uuid) {
+    return Peripherals.find();
+  });
 
 
   var fut = new Future();
@@ -93,6 +106,12 @@ if (Meteor.isServer) {
 
   var bleConnect = function (uuid, peripheral) {
     
+    // peripheral.discoverServices([NORDIC_NRF8001_SERVICE_UART], function (error, services) {
+    //   console.log("Found Custom UART Service");
+    // });
+
+    bleDiscoverSomeServicesAndCharacteristicsBound(peripheral);
+
     var docPeripheral = Peripherals.findOne({uuid: uuid});
     Peripherals.update(docPeripheral._id, peripheralToJson(peripheral));
 
@@ -105,6 +124,54 @@ if (Meteor.isServer) {
     Peripherals.update(docPeripheral._id, peripheralToJson(peripheral));
 
     console.log('ble:disconnect peripheral?', peripheral);
+    return true;
+  };
+  var bleDiscoverSomeServicesAndCharacteristics = function(peripheral) {
+    // Get the Custom UART service, and corresponding RX, TX characteristics.
+    peripheral.discoverSomeServicesAndCharacteristics(
+      [NORDIC_NRF8001_SERVICE_UART],
+      [NORDIC_NRF8001_CHAR_TX, NORDIC_NRF8001_CHAR_RX],
+      function (err, services, characteristics) {
+        console.log('ble:connect, discover services/characteristics');
+
+        var charRX, charTX; // RX is 'writeWithoutResponse', TX is 'notify'
+        var index = 0;
+        for (index = 0; index < characteristics.length; index++) {
+          switch(characteristics[index].uuid) {
+            case NORDIC_NRF8001_CHAR_RX : 
+              charRX = characteristics[index];
+              break;
+            case NORDIC_NRF8001_CHAR_TX :
+              charTX = characteristics[index];
+              break;
+          }
+        }
+
+        charRX.notify(true, function (err) {
+          console.log('characteristics RX notify');
+        });
+
+        charRX.on('data', function (data, isNotification) {
+          bleCharRXBound(peripheral.uuid, data, isNotification);
+        });
+      }
+    );
+
+    return true;
+  };
+
+  var bleCharRX = function (uuid, data, isNotification) {
+    var ascii = data.toString('ascii');
+    var ypr = ascii.split('|');
+
+    YawPitchRoll.insert({
+      uuid: uuid,
+      yaw: ypr[0],
+      pitch: ypr[1],
+      roll: ypr[2]
+    });
+    
+    console.log('RX: on data', ascii, 'isNotification', isNotification);
   };
 
   var findPeripheralByUUID = function (uuid, cb) {
@@ -123,6 +190,8 @@ if (Meteor.isServer) {
   var bleDiscoverBound = Meteor.bindEnvironment(bleDiscover);
   var bleConnectBound = Meteor.bindEnvironment(bleConnect);
   var bleDisconnectBound = Meteor.bindEnvironment(bleDisconnect);
+  var bleDiscoverSomeServicesAndCharacteristicsBound = Meteor.bindEnvironment(bleDiscoverSomeServicesAndCharacteristics);
+  var bleCharRXBound = Meteor.bindEnvironment(bleCharRX);
 
   Meteor.methods({
     'ble:startScanning': function () {
@@ -139,6 +208,8 @@ if (Meteor.isServer) {
 
     'ble:purge': function () {
       Peripherals.remove({});
+      YawPitchRoll.remove({});
+
       console.log('ble:purge, collection of peripherals is empty');
     },
 
@@ -148,39 +219,31 @@ if (Meteor.isServer) {
 
       if (existingRecord) {
         Peripherals.update(existingRecord._id, peripheral);
-        console.log('ble:discover, peripheral updated in collection', peripheral);
+        console.log('ble:discover, peripheral updated in collection');
       } else {
         Peripherals.insert(peripheral);
-        console.log('ble:discover, peripheral inserted to collection', peripheral);
+        console.log('ble:discover, peripheral inserted to collection');
       }
       
     },
 
     'ble:connect': function (uuid) {
       var Peripheral = findPeripheralByUUID(uuid, function (peripheral) {
+        console.log('connect', uuid);
         peripheral.connect(function () {
+          
           bleConnectBound(uuid, peripheral);
         });
       });
-
-      // if (!Peripheral) {
-      //   // Try and find it again.
-      //   console.log('attempting to find ' + uuid);
-      //   noble.startScanning([uuid], false);
-      // }
-
-      
     },
 
     'ble:disconnect': function (uuid) {
       var Peripheral = findPeripheralByUUID(uuid, function (peripheral) {
-        console.log('disconnect ', uuid);
+        console.log('disconnect', uuid);
         peripheral.disconnect(function () {
           bleDisconnectBound(uuid, peripheral);
         });
       });
-
-      
     }
 
   });
