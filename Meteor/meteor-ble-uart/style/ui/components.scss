@@ -1,0 +1,1659 @@
+@import "bourbon/bourbon";
+@import "neat/neat";
+@import "base/base";
+
+.accordion {  
+  $base-border-color: gainsboro !default;
+  $base-line-height: 1.5em !default;
+  $base-spacing: 1.5em !default;
+  $dark-gray: #333 !default;
+  $base-font-color: $dark-gray !default;
+  $accordion-menu-border-color: $base-border-color;
+  $accordion-menu-color: $base-font-color;
+  $accordion-menu-border: 1px solid $accordion-menu-border-color;
+  $accordion-menu-background: lighten($accordion-menu-border-color, 10%);
+  $accordion-menu-hover: lighten($accordion-menu-background, 2%);
+  $accordion-menu-sub-background: darken($accordion-menu-background, 5%);
+  $accordion-menu-sub-inset: darken($accordion-menu-sub-background, 6%);
+  $accordion-menu-sub-hover: lighten($accordion-menu-sub-background, 2%);
+  $accordion-menu-list-padding: ($base-spacing / 2) $gutter;
+  
+  background-color: $accordion-menu-background;
+  border: $accordion-menu-border;
+  margin: 0 0 $base-spacing 0;
+  padding: 0;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    border-bottom: $accordion-menu-border;
+    list-style: none;
+
+    > a {
+      color: $accordion-menu-color;
+      display: block;
+      padding: $accordion-menu-list-padding;
+      text-decoration: none;
+    }
+
+    &:last-child {
+      border: none;
+    }
+
+    &:focus,
+    &:hover {
+      background-color: $accordion-menu-hover;
+    }
+  }
+
+  ul.submenu {
+    display: none;
+
+    li {
+      background-color: $accordion-menu-sub-background;
+
+      &:first-child {
+        border-top: $accordion-menu-border;
+        box-shadow: inset 0 1px 1px $accordion-menu-sub-inset;
+      }
+      
+      &:focus,
+      &:hover {
+        background-color: $accordion-menu-sub-hover;
+      }
+    }
+  }
+
+  .is-expanded {
+    display: block;
+    padding-bottom: 0;
+  }
+}
+
+
+$action-color: #477dca !default;
+
+.animated {
+  @include animation-duration(1s);
+  @include animation-fill-mode(both);
+
+  &.infinite {
+    @include animation-iteration-count(infinite);
+  }
+
+  &.alternate {
+    @include animation-direction(alternate);
+  }
+
+  &.iteration {
+    @include animation-iteration-count(2);
+  }
+}
+
+// Tweak the keyframes below. Or swap them with another animation pattern at 
+// https://github.com/daneden/animate.css/tree/master/source
+
+@-webkit-keyframes zoomOut {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+            transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+            transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.zoomOut {
+  -webkit-animation-name: zoomOut;
+          animation-name: zoomOut;
+}
+
+/////////////////////////////////////////////////////////////
+
+.animate-target {
+  @include size(6em);
+  -webkit-transform-style: preserve-3d;
+  border-radius: 50%;
+  border: 22px solid #e2e2e3;
+  margin: 0 auto 3em;
+  text-align: center;
+}
+
+button {
+  @include button(flat, $action-color);
+  display: block;
+  margin: auto;
+  outline: none;
+  padding: 0.8em 1em;
+  text-align: center;
+}
+
+
+
+$badge-font-size: 0.75em !default;
+$medium-gray: #999 !default;
+$alert-color: #fff6bf !default;
+$error-color: #fbe3e4 !default;
+$notice-color: #e5edf8 !default;
+$success-color: #e6efc2 !default;
+
+@mixin badge($color: $medium-gray) {
+  background-color: $color;
+  border-radius: $badge-font-size * 5;
+  color: darken($color, 60%);
+  display: inline-block;
+  font-size: $badge-font-size;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.4em 1.2em;
+}
+
+.badge {
+  @include badge;
+}
+
+.badge-alert {
+  @include badge($alert-color);
+}
+
+.badge-error {
+  @include badge($error-color);
+}
+
+.badge-notice {
+  @include badge($notice-color);
+}
+
+.badge-success {
+  @include badge($success-color);
+}
+
+
+.breadcrumb {   
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-background-color: white !default;
+  $base-spacing: 1.5em !default;
+  $action-color: #477DCA !default;
+  $base-link-color: $action-color !default;
+  $medium-gray: #999 !default;
+  $light-gray: #DDD !default;
+  $medium-screen: em(640) !default;
+  $breadcrumb-border-color: $base-border-color;
+  $breadcrumb-border: 1px solid $breadcrumb-border-color;
+  $breadcrumb-height: $base-spacing * 1.5;
+  $breadcrumb-arrow-color: $breadcrumb-border-color;
+  $breadcrumb-background: $base-background-color;
+  $breadcrumb-inactive-hover-color: $breadcrumb-background;
+  $breadcrumb-color: $medium-gray;
+  $breadcrumb-color-hover: $action-color;
+  $breadcrumb-color-active: $breadcrumb-color;
+
+  display: inline-block;
+  margin-bottom: $base-spacing;
+  text-align: left;
+
+  a {
+    background-color: $breadcrumb-background;
+    border-left: 0;
+    border: $breadcrumb-border;
+    color: $breadcrumb-color;
+    display: inline-block;
+    font-size: 0.8em;
+    line-height: $breadcrumb-height;
+    margin-bottom: 2px;
+    margin-right: -5px;
+    padding: 0 ($breadcrumb-height / 4) 0 ($breadcrumb-height / 2);
+    position: relative;
+    text-decoration: none;
+
+    &:first-child {
+      border-bottom-left-radius: $base-border-radius;
+      border-left: $breadcrumb-border;
+      border-top-left-radius: $base-border-radius;
+      padding-left: $breadcrumb-height / 2;
+    }
+
+    &:last-child {
+      background-color: $breadcrumb-background;
+      border-bottom-right-radius: $base-border-radius;
+      border-top-right-radius: $base-border-radius;
+      color: $breadcrumb-color-active;
+      padding-right: $breadcrumb-height / 2;
+    }
+
+    &:focus,
+    &:hover {
+      background-color: $breadcrumb-inactive-hover-color;
+      color: $breadcrumb-color-hover;
+    }
+
+    &:after,
+    &:before {
+      @include position(absolute, 0px auto 0px 100%);
+      border-bottom: $breadcrumb-height / 2 solid transparent;
+      border-left: $breadcrumb-height / 4 solid transparent;
+      border-top: $breadcrumb-height / 2 solid transparent;
+      content: '';
+      display: block;
+      margin: auto;
+      z-index: 2;
+    }
+
+    &:last-child:after,
+    &:last-child:before {
+       border: none;
+    }
+
+    &:before {
+      border-left-color: $breadcrumb-arrow-color;
+      margin-left: 1px;
+      z-index: 1;
+    }
+    &:after {
+      border-left-color: $breadcrumb-background;
+    }
+
+    @include media($medium-screen) {
+      font-size: 1em;
+      padding: 0 ($breadcrumb-height / 2) 0 ($breadcrumb-height / 1.5);
+    }
+  }
+}
+
+
+.button-group {  
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-line-height: 1.5em !default;
+  $base-spacing: 1.5em !default;
+  $base-font-size: 1em !default;
+  $base-background-color: white !default;
+  $action-color: #477DCA !default;
+  $base-link-color: $action-color !default;
+  $dark-gray: #333 !default;
+  $large-screen: em(860) !default;
+  $base-font-color: $dark-gray !default;
+  $button-group-background: $base-background-color;
+  $button-group-color: lighten($base-font-color, 30%);
+  $button-group-border: 1px solid silver;
+  $button-group-inner-border: 1px solid lighten(silver, 18%);
+  $button-group-background-checked: $action-color;
+  $button-group-color-checked: white;
+  $button-group-border-checked: darken($button-group-background-checked, 15%);
+
+  input {
+    display: none;
+  }
+
+  label {
+    margin-bottom: 0;
+
+    @include media($large-screen) {
+      float: left;
+    }
+
+    .button-group-item {
+      background: $button-group-background;
+      border-left: $button-group-border;
+      border-radius: 0;
+      border-right: $button-group-border;
+      color: $button-group-color;
+      cursor: pointer;
+      display: inline-block;
+      font-size: $base-font-size;
+      font-weight: normal;
+      line-height: 1;
+      padding: 0.75em 1em;
+      width: 100%;
+
+      @include media($large-screen) {
+        border-bottom: $button-group-border;
+        border-left: 0;
+        border-right: $button-group-inner-border;
+        border-top: $button-group-border;
+        width: auto;
+      }
+
+      &:focus,
+      &:hover {
+        background-color: darken($button-group-background, 3%);
+      }
+    }
+
+    &:first-child .button-group-item {
+      border-top-left-radius: $base-border-radius;
+      border-top-right-radius: $base-border-radius;
+      border-top: $button-group-border;
+
+      @include media($large-screen) {
+        border-bottom-left-radius: $base-border-radius;
+        border-left: $button-group-border;
+        border-top-left-radius: $base-border-radius;
+        border-top-right-radius: 0;
+      }
+    }
+
+    &:last-child .button-group-item {
+      border-bottom-left-radius: $base-border-radius;
+      border-bottom-right-radius: $base-border-radius;
+      border-bottom: $button-group-border;
+
+      @include media($large-screen) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: $base-border-radius;
+        border-right: $button-group-border;
+        border-top-right-radius: $base-border-radius;
+      }
+    }
+
+    input:checked + .button-group-item {
+      background: $button-group-background-checked;
+      border: 1px solid $button-group-border-checked;
+      box-shadow: inset 0 1px 2px darken($button-group-background-checked, 10%);
+      color: $button-group-color-checked;
+    }
+  }
+}
+
+
+.dropdown {
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-line-height: 1.5em !default;
+  $base-background-color: white !default;
+  $dark-gray: #333 !default;
+  $large-screen: em(860) !default;
+  $base-font-color: $dark-gray !default;
+  $dropdown-color: $base-font-color;
+  $dropdown-description-color: lighten($dropdown-color, 40%);
+  $dropdown-border: 1px solid silver;
+  $dropdown-background: $base-background-color;
+  $dropdown-background-hover: darken($dropdown-background, 3%);
+  $dropdown-inner-border: 1px solid silver;
+  $dropdown-height: 40px;
+  $dropdown-padding: 1em;
+  $dropdown-distance-from-menu: 50px;
+  $dropdown-arrow-top-distance: 0;
+
+  line-height: $base-line-height;
+
+  .dropdown-container {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+  }
+
+  .dropdown-description {
+    background: $dropdown-background;
+    border-bottom-left-radius: $base-border-radius;
+    border-bottom: $dropdown-border;
+    border-left: $dropdown-border;
+    border-top-left-radius: $base-border-radius;
+    border-top: $dropdown-border;
+    color: $dropdown-description-color;
+    float: left;
+    font-size: 0.7em;
+    line-height: $dropdown-height;
+    margin: 0;
+    padding: 0 ($dropdown-padding / 2) 0 $dropdown-padding;
+
+    @include media($large-screen) {
+      font-size: 1em;
+    }
+  }
+
+  .dropdown-button {
+    background: $dropdown-background;
+    border-bottom-right-radius: $base-border-radius;
+    border-top-right-radius: $base-border-radius;
+    border-top: $dropdown-border;
+    border-right: $dropdown-border;
+    border-bottom: $dropdown-border;
+    cursor: pointer;
+    float: right;
+    font-size: 0.7em;
+    font-weight: 800;
+    line-height: $dropdown-height;
+    margin: 0;
+    padding: 0 ($dropdown-padding * 2.5) 0 ($dropdown-padding / 2);
+    position: relative;
+
+    @include media($large-screen) {
+      font-size: 1em;
+      padding: 0 ($dropdown-padding * 2.5) 0 ($dropdown-padding / 2);
+    }
+  }
+
+  .dropdown-button:hover {
+    background-color: $dropdown-background-hover;
+  }
+
+  .dropdown-button:after {
+    color: $base-font-color;
+    content: "\25BE";
+    display: block;
+    position: absolute;
+    right: $dropdown-padding;
+    top: $dropdown-arrow-top-distance;
+  }
+
+  .dropdown-menu {
+    @include transition (all 0.2s ease-in-out);
+    background: $dropdown-background;
+    border-radius: $base-border-radius;
+    border: $dropdown-border;
+    box-shadow: 0 2px 2px transparentize(black, 0.8);
+    color: $dropdown-color;
+    cursor: pointer;
+    display: none;
+    margin: 0;
+    overflow: show;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: $dropdown-distance-from-menu;
+    width: 228px;
+    z-index: 99999;
+
+    &:before {
+      @include position(absolute, 0 1em 0 0);
+      color: $dropdown-background;
+      content: "\25b2";
+      font-size: 1.4em;
+      pointer-events: none;
+      text-shadow: 0 -2px 2px transparentize(black, 0.7);
+      top: -0.7em;
+    }
+  }
+
+  .dropdown-menu li {
+    border-bottom: $dropdown-inner-border;
+    color: $dropdown-color; 
+    list-style: none;
+    padding: $dropdown-padding / 2;
+  }
+
+  .dropdown-menu li:hover {
+    background: $dropdown-background-hover;
+  }
+
+  .dropdown-menu li:first-child {
+    border-top-left-radius: $base-border-radius;
+    border-top-right-radius: $base-border-radius;
+  }
+
+  .dropdown-menu li:last-child {
+    border: none;
+    border-bottom-left-radius: $base-border-radius;
+    border-bottom-right-radius: $base-border-radius;
+  }
+
+  .show-menu {
+    display: block;
+  }
+}
+// Inspired by code by www.HUSAMUI.com
+
+
+
+.expander {  
+  $base-font-size: 1em !default;
+  $base-line-height: 1.5em !default;
+  $base-spacing: 1.5em !default;
+  $action-color: #477DCA !default;
+  $base-link-color: $action-color !default;
+  $dark-gray: #333 !default;
+  $light-gray: #DDD !default;
+  $base-font-color: $dark-gray !default;
+  $expander-arrow-width: 0.7em;
+  $expander-toggle-size: 1em;
+  $expander-toggle-arrow-size: $expander-toggle-size;
+  $expander-toggle-margin: 1em;
+
+  width: 60%;
+
+  .expander-trigger {
+    @include user-select(none);
+    border-bottom: 1px solid $light-gray;
+    color: $base-link-color;
+    cursor: pointer;
+    display: block;
+    font-size: $expander-toggle-size;
+    margin-bottom: $expander-toggle-size;
+    padding-bottom: $expander-toggle-size / 4;
+    text-decoration: none;
+
+    &:before {
+      font-size: $expander-arrow-width;
+      content: "\25BC";
+      margin-right: 0.5em;
+    }
+  }
+
+  .expander-content p {
+    color: $base-font-color;
+    line-height: $base-line-height;
+  }
+
+  .expander-hidden {
+    &:before {
+      font-size: $expander-arrow-width;
+      content: "\25BA";
+    }
+  }
+
+  .expander-hidden + .expander-content {
+    display: none;
+  }
+}
+
+
+
+.fade-in-element {
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-background-color: white !default;
+  $base-line-height: 1.5em !default;
+  $base-spacing: 1.5em !default;
+  $dark-gray: #333 !default;
+  $base-font-color: $dark-gray !default;
+  
+  @include clearfix;
+  background: $base-background-color;
+  border-radius: $base-border-radius;
+  border: 1px solid silver;
+  box-shadow: 0 2px 2px transparentize(black, 0.8);
+  line-height: $base-line-height;
+  margin-bottom: 4em;
+  padding: $base-spacing;
+  text-align: center;
+  width: 100%;
+
+  p {
+    color: $base-font-color;
+    line-height: $base-line-height;
+  }
+}
+
+.js-fade-element-hide {
+  opacity: 0;
+}
+
+.js-fade-element-show {
+  @include transition (all 0.4s ease-in-out);
+  opacity: 1;
+}
+
+
+$base-spacing: 1.5em !default;
+$alert-color: #fff6bf !default;
+$error-color: #fbe3e4 !default;
+$notice-color: #e5edf8 !default;
+$success-color: #e6efc2 !default;
+
+@mixin flash($color) {
+  background-color: $color;
+  color: darken($color, 60%);
+  display: block;
+  font-weight: 600;
+  margin-bottom: $base-spacing / 2;
+  padding: $base-spacing / 2;
+  text-align: center;
+
+  a {
+    color: darken($color, 70%);
+    text-decoration: underline;
+
+    &:focus,
+    &:hover {
+      color: darken($color, 90%);
+    }
+  }
+}
+
+.flash-alert {
+  @include flash($alert-color);
+}
+
+.flash-error {
+  @include flash($error-color);
+}
+
+.flash-notice {
+  @include flash($notice-color);
+}
+
+.flash-success {
+  @include flash($success-color);
+}
+
+
+.hover-tile-outer {
+  $base-border-color: gainsboro !default;
+  $base-line-height: 1.5em !default;
+  $medium-screen: em(640) !default;
+  $hover-tile-height: 10em;
+  $base-spacing: 1.5em;
+
+  background: url("https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains.png");
+  background-position: top;
+  background-size: cover;
+  background-color: beige;
+  border: 1px solid $base-border-color;
+  cursor: pointer;
+  height: $hover-tile-height;
+  margin-bottom: $base-line-height;
+  
+  @include media($medium-screen) {
+    width: 40%;
+  }
+
+  .hover-tile-container {
+    height: $hover-tile-height;
+    overflow: hidden;
+  }
+
+  .hover-tile-container:hover > .hover-tile {
+    @include transform(translate(0, -100%));
+  }
+
+  .hover-tile {
+    @include transition(all, 0.2s ease-in-out);
+    background: inherit;
+    color: white;
+    height: inherit;
+    overflow: hidden;
+    padding: $base-spacing;
+  }
+
+  .hover-tile-hidden {
+    background: transparentize(#000, 0.5);
+
+    p {
+      color: transparentize(#fff, 0.3);
+      line-height: $base-line-height;
+    }
+
+    h4 {
+      margin: 0 0 0.5em 0;
+    }
+  }
+}
+
+
+
+.image-gradient-dynamic {
+  $image-gradient-color-top: red; 
+  $transparency-top: 0.9;
+  $image-gradient-color-bottom: green; 
+  $transparency-bottom: 0.6;
+  $vertical-angle: 0deg;
+  $image-gradient-color-left: teal; 
+  $transparency-left: 0.8;
+  $image-gradient-color-right: yellow; 
+  $transparency-right: 0.8;
+  $horizontal-angle: 90deg;
+  
+  line-height: 0;
+  position: relative;
+  width: 100%;
+
+  img {
+   height: auto;
+   left: 0; 
+   position: relative;
+   top: 0;
+   width: 100%;
+  }
+
+  .copy {
+    @include transform(translate(-50%, -50%));
+    left: 50%;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    z-index: 999;
+
+    p {
+      color: white;
+      font-weight: 800;
+      line-height: 1.5em;
+      padding: 1em 2em;
+      position: relative;
+    }
+  }
+
+  .overlay {
+    @include linear-gradient($vertical-angle, transparentize($image-gradient-color-top, $transparency-top), 
+      transparentize($image-gradient-color-bottom, $transparency-bottom));
+    display: block;
+    @include position(absolute, 0px 0px 0px 0px);
+
+    &:after {
+      @include linear-gradient($horizontal-angle, transparentize($image-gradient-color-left, $transparency-left), 
+        transparentize($image-gradient-color-right, $transparency-right));
+      @include position(absolute, 0px 0px 0px 0px);
+      content: '';
+      display: block;
+    }
+  }
+}
+
+
+.modal {
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-background-color: white !default;
+  $base-font-size: 1em !default;
+  $base-line-height: 1.5em !default;
+  $action-color: #477DCA !default;
+  $dark-gray: #333 !default;
+  $light-gray: #DDD !default;
+  $medium-screen: em(640) !default;
+  $large-screen: em(860) !default;
+  $base-font-color: $dark-gray !default;
+  $modal-padding: 3em;
+  $modal-background: $base-background-color;
+  $modal-close-color: $light-gray;
+  $modal-image-height: 135px;
+  $modal-image-width: $modal-image-height;
+  $modal-trigger-image-width: 300px;
+
+  label {
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+
+  label img {
+    border-radius: $modal-trigger-image-width / 2;
+    display: block;
+    max-width: $modal-trigger-image-width;
+  }
+
+  .modal-state {
+    display: none;
+  }
+
+  .modal-trigger {
+    @include button(flat, $action-color);
+    padding: 0.8em 1em;
+  }
+
+  .modal-fade-screen { // overlay
+    @include transition(opacity 0.25s ease);
+    @include position(fixed, 0px 0px 0px 0px);
+    background: rgba(0,0,0, 0.85);
+    opacity: 0;
+    padding-top: 0.6em;
+    text-align: left;
+    visibility: hidden;
+    z-index: 99999999999;
+
+    @include media($large-screen) {
+      padding-top: 10em;
+    }
+
+    .modal-bg {
+      @include position(absolute, 0px 0px 0px 0px);
+      cursor: pointer;
+    }
+  }
+
+  .modal-close {
+    @include position(absolute, ($modal-padding /2) ($modal-padding /2) null null);
+    @include size(1.5em);
+    background: $modal-background;
+    cursor: pointer;
+
+    &:after,
+    &:before {
+      @include position(absolute, 3px 3px 0 50%);
+      @include transform(rotate(45deg));
+      @include size(0.15em 1.5em);
+      background: $modal-close-color;
+      content: '';
+      display: block;
+      margin: -3px 0 0 -1px;
+    }
+
+    &:hover:after,
+    &:hover:before {
+      background: darken($modal-close-color, 10%);
+    }
+
+    &:before {
+      @include transform(rotate(-45deg));
+    }
+  }
+
+  .modal-inner {
+    @include transition(opacity 0.25s ease);
+    background: $modal-background;
+    border-radius: $base-border-radius;
+    margin-top: 0;
+    margin: auto;
+    max-height: 95%;
+    overflow: auto;
+    padding: $modal-padding / 2;
+    position: relative;
+    width: 95%;
+
+    @include media($medium-screen) {
+      max-height: 70%;
+      padding: $modal-padding;
+      width: 60%;
+    }
+
+    @include media($large-screen) {
+      width: 50%;
+    }
+
+    h1 {
+      color: $base-font-color;
+      margin-bottom: 0 0 0.6em 0;
+      text-align: left;
+      text-transform: capitalize;
+    }
+
+    p {
+      color: $base-font-color;
+      line-height: $base-line-height;
+    }
+
+    .modal-intro {
+      font-weight: 800;
+    }
+
+    .modal-content {
+      color: $base-font-color;
+
+      @include media($medium-screen) {
+        @include columns(2 8em);
+      }
+    }
+
+    a.cta {
+      color: white;
+      display: inline-block;
+      margin-right: 0.5em;
+      margin-top: 1em;
+
+      &:last-child {
+        padding: 0 2em;
+      }
+    }
+  }
+
+  .modal-state:checked + .modal-fade-screen {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-state:checked + .modal-fade-screen .modal-inner {
+    top: 0.5em;
+  }
+}
+
+.modal-open {
+  overflow: hidden;
+}
+
+// Based on code by Kasper Mikiewicz
+
+
+
+.pagination {  
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-spacing: 1.5em !default;
+  $action-color: #477DCA !default;
+  $base-link-color: $action-color !default;
+  $dark-gray: #333 !default;
+  $large-screen: em(860) !default;
+  $base-font-color: $dark-gray !default;
+  $pagination-border-color: $base-border-color;
+  $pagination-border: 1px solid $pagination-border-color;
+  $pagination-background: lighten($pagination-border-color, 10);
+  $pagination-hover-background: lighten($pagination-background, 5);
+  $pagination-color: $base-font-color;
+
+  text-align: center;
+
+  ul {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    
+    li {
+      display: inline;
+      list-style: none;
+    }
+
+    ul li {
+      display: none;
+      
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3) {
+        display: inline;
+      }
+
+      @include media($large-screen) {
+        display: inline;
+      }
+    }
+
+    li a {
+      @include transition (all 0.2s ease-in-out);
+      background: $pagination-background;
+      border-radius: $base-border-radius;
+      border: $pagination-border;
+      color: $pagination-color;
+      outline: none;
+      padding: ($base-spacing / 4) ($gutter / 2);
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        background: $pagination-hover-background;
+        color: $base-link-color;
+      }
+
+      &:active {
+        background: $pagination-background;
+      }
+    }
+  }
+}
+
+
+$parallax-window-height: 30em;
+$parallax-background-height: $parallax-window-height * 2;
+
+.parallax-window {
+  max-height: $parallax-window-height;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.parallax-static-content {
+  color: #9A9A8A;
+  padding: 8em 0;
+  position: relative;
+  z-index: 9;
+}
+
+.parallax-background {
+  background: url("https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains.png") repeat;
+  background-position: top;
+  background-size: cover;
+  background-color: beige;
+  height: $parallax-background-height;
+  left: 0;
+  position: absolute;
+  top: - $parallax-window-height / 3;
+  width: 100%;
+}
+
+// Based on http://codepen.io/skeurentjes/
+
+
+.progress-bar {
+  $base-border-color: gainsboro !default;
+  $base-background-color: white !default;
+  $base-border-radius: 3px !default;
+  $action-color: #477DCA !default;
+  $base-link-color: $action-color !default;
+  $progress-border-color: $base-border-color;
+  $progress-border: 1px solid $progress-border-color;
+  $progress-meter-border-color: $action-color;
+  $progress-meter-border: 1px solid darken($progress-meter-border-color, 15%);
+  $progress-meter-color: $progress-meter-border-color;
+  $progress-background: darken($base-background-color, 5);
+  $progress-animation-duration: 0.7s;
+  $progress-height: 30px;
+
+  background-color: $progress-background;
+  border: $progress-border;
+  box-shadow: inset 0 0 3px 0 rgba(darken($progress-background, 50%), 0.15);
+  border-radius: $base-border-radius;
+  height: $progress-height;
+  margin: 0 auto;
+  padding: 2px;
+  width: 100%;
+
+  > span.meter {
+    @include animation(progress $progress-animation-duration linear infinite);
+    @include box-sizing(border-box);
+    background-color: $progress-meter-color;
+    @include background-image(linear-gradient(-45deg, rgba(255,255,255, 0.15) 25%,
+                                                      transparent 25%,
+                                                      transparent 50%,
+                                                      rgba(255,255,255, 0.15) 50%,
+                                                      rgba(255,255,255, 0.15) 75%,
+                                                      transparent 75%));
+    background-size: 40px 40px;
+    background-repeat: repeat-x;
+    border: $progress-meter-border;
+    border-radius: $base-border-radius / 1.5;
+    display: block;
+    height: 100%;
+    width: 60%;
+  }
+}
+
+@-webkit-keyframes progress {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 40px 0px;
+  }
+}
+
+@-moz-keyframes progress {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 40px 0px;
+  }
+}
+
+@-ms-keyframes progress {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 40px 0px;
+  }
+}
+
+@-o-keyframes progress {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 40px 0px;
+  }
+}
+
+@keyframes progress {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 40px 0px;
+  }
+}
+
+
+.progress-bar-indication {  
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-background-color: white !default;
+  $base-line-height: 1.5em !default;
+  $action-color: #477DCA !default;
+  $progress-border-color: $base-border-color;
+  $progress-border: 1px solid $progress-border-color;
+  $progress-meter-border-color: $action-color;
+  $progress-meter-border: 1px solid darken($progress-meter-border-color, 15%);
+  $progress-meter-color: $progress-meter-border-color;
+  $progress-background: darken($base-background-color, 5);
+  $progress-animation-duration: 0.7s;
+  $progress-color: white;
+
+  background-color: $progress-background;
+  border-radius: $base-border-radius;
+  border: $progress-border;
+  box-shadow: inset 0 0 3px 0 rgba(darken($progress-background, 50%), 0.15);
+  margin: 0 auto;
+  width: 100%;
+
+  > span.meter {
+    @include box-sizing(border-box);
+    background-color: $progress-meter-color;
+    background-repeat: repeat-x;
+    background-size: 40px 40px;
+    border-bottom-right-radius: 0;
+    border-radius: $base-border-radius /1.5;
+    border-top-right-radius: 0;
+    border: $progress-meter-border;
+    display: block;
+    height: 100%;
+    width: 60%;
+  }
+
+  p {
+    color: $progress-color;    
+    font-weight: 800;
+    line-height: $base-line-height;
+    margin: 0;
+    padding: .1em .5em;
+    text-shadow: 0 0 1px black;
+  }
+}
+
+
+
+.ribbon-box {
+  @include size(100px);
+  border: 1px solid #bbb;
+  position: relative;
+}
+
+.ribbon-wrapper {
+  $action-color: #477dca !default;
+  $ribbon-background: $action-color;
+  $ribbon-size: 85px;
+
+  @include size($ribbon-size);
+  overflow: hidden;
+  position: absolute;
+  right: -1px;
+  top: -1px;
+
+  .ribbon {
+    @include transform(rotate(45deg));
+    background-color: $ribbon-background;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 0.8em;
+    font-weight: 800;
+    left: -5px;
+    line-height: 1.5em;
+    padding: 2px 7px;
+    position: relative;
+    text-align: center;
+    top: 15px;
+    width: 120px;
+  }
+}
+
+
+.video-wrapper {
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 56.25%; // For ratio 16:9. 75% if ratio is 4:3
+  position: relative;
+
+  embed,
+  object,
+  iframe {
+    @include position(absolute, 0px null null 0px);
+    @include size(100%);
+  }
+}
+
+
+form.search-bar {  
+  ///////////////////////////////////////////////////////////////////////////////////
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-line-height: 1.5em !default;
+  $action-color: #477DCA !default;
+  $dark-gray: #333 !default;
+  //////////////////////////////////////////////////////////////////////////////////
+
+  $search-bar-border-color: $base-border-color;
+  $search-bar-border: 1px solid $search-bar-border-color;
+  $search-bar-background: lighten($search-bar-border-color, 10%);
+
+  position: relative;
+
+  input[type=search] {
+    @include appearance(none);
+    @include box-sizing(border-box);
+    @include transition(border-color);
+    background-color: white;
+    border-radius: $base-border-radius;
+    border-radius: $base-border-radius;
+    border: 1px solid $base-border-color;
+    display: block;
+    font-size: 1em;
+    font-style: italic;
+    margin: 0;
+    padding: ($base-spacing / 3) ($base-spacing / 3);
+    position: relative;
+    width: 100%;
+  }
+
+  button[type=submit] {
+    @include button(flat, $action-color);
+    @include position(absolute, 0em 0em 0em null);
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    outline: none;
+    padding: 5px 10px;
+
+    img {
+      height: 12px;
+      opacity: 0.7;
+    }
+  }
+}
+
+
+
+.sliding-panel-content {  
+  $action-color: #477DCA !default;
+  $dark-gray: #333 !default;
+  $sliding-panel-border-color: $dark-gray;
+  $sliding-panel-background: lighten($sliding-panel-border-color, 5%);
+  $sliding-panel-color: #fff;
+  $sliding-panel-border: 1px solid $sliding-panel-border-color;
+  $sliding-panel-background-hover: $action-color;
+  $sliding-panel-color-hover: #fff;
+  $sliding-panel-background-focus: lighten($sliding-panel-background, 5%);
+
+  @include position(fixed, 0px auto 0px 0px);
+  @include size(220px 100%);
+  @include transform(translateX(-220px));
+  @include transition(all 0.25s linear);
+  background: $sliding-panel-background;
+  z-index: 999999;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  li a {
+    border-bottom: $sliding-panel-border;
+    color: $sliding-panel-color;
+    display: block;
+    font-weight: bold;
+    padding: 1em;
+    text-decoration: none;
+
+    &:focus {
+      background-color: $sliding-panel-background-focus;
+    }
+
+    &:hover {
+      background-color: $sliding-panel-background-hover;
+      color: $sliding-panel-color-hover;
+    }
+  }
+
+  &.is-visible {
+    @include transform(translateX(0));
+  }
+}
+
+.sliding-panel-fade-screen {
+  @include position(fixed, 0px 0px 0px 0px);
+  @include transition;
+  background: black;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 999998;
+
+  &.is-visible {
+    opacity: 0.4;
+    visibility: visible;
+  }
+}
+
+.sliding-panel-button {
+  @include button(flat, #477DCA);
+  padding: 10px 16px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+
+  img {
+    height: 1.3em;
+  }
+}
+
+// Based on code by Diego Eis
+
+
+.label-switch {  
+  $action-color: #477DCA !default;
+  $base-background-color: white !default;
+  $switch-width: 52px;
+  $switch-padding: 2px;
+  $switch-height: 32px;
+  $switch-radius: $switch-height;
+  $knob-size: $switch-height - ($switch-padding * 2);
+  $knob-radius: $switch-height - ($switch-padding * 2);
+  $knob-width: $knob-size;
+  $switch-background: $base-background-color;
+  $switch-border-background: darken($base-background-color, 9%);
+  $switch-shadow: 0 2px 5px transparentize(black, 0.6);
+
+  border-radius: $switch-radius;
+  cursor: pointer;
+  display: inline-block;
+  height: $switch-height;
+  position: relative;
+  width: $switch-width;
+
+  input[type="checkbox"] {
+    display: none;
+
+    + .checkbox {
+      @include transition(all 0.3s ease);
+      background: $switch-border-background;
+      border-radius: $switch-radius;
+      border: none;
+      cursor: pointer;
+      height: $switch-height;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      width: $switch-width;
+      z-index: 0;
+
+      &:before {
+        @include position(absolute, 2px 0 0 2px);
+        @include transform(scale(1));
+        @include transition(all 0.3s ease);
+        background: $switch-background;
+        border-radius: $switch-radius;
+        content: "";
+        height: $knob-radius;
+        width: $switch-width - ($switch-padding * 2);
+        z-index: 1;
+      }
+
+      &:after {
+        @include position(absolute, 2px 0 0 2px);
+        @include transition(all 0.3s ease);
+        @include size($knob-size);
+        background: $switch-background;
+        border-radius: $knob-radius;
+        box-shadow: $switch-shadow;
+        content: "";
+        z-index: 2;
+      }
+    }
+
+    &:checked {
+      + .checkbox {
+        background: $action-color;
+
+        &:before {
+          @include transform(scale(0));
+        }
+
+        &:after {
+          left: $switch-width - $knob-width - ($switch-padding);
+        }
+      }
+    }
+  }
+}
+
+
+
+.stats {
+  $base-spacing: 1.5em !default;
+  $dark-gray: #333 !default;
+  $base-font-color: $dark-gray !default;
+  $action-color: #477dca !default;
+  $stats-color: lighten($action-color, 10%);
+
+  padding: $base-spacing / 2;
+
+  ul {
+    padding: 0;
+  }
+
+  li {
+    border-right: 1px solid transparentize($base-font-color, 0.8);
+    color: $stats-color;
+    display: inline;
+    float: left;
+    font-size: 1.2em;
+    font-weight: 800;
+    line-height: 1.1em;
+    padding: 0 0.7em;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  span {
+    color: $base-font-color;
+    display: block;
+    font-size: 0.7em;
+    font-weight: normal;
+  }
+}
+
+
+@mixin texture($gradient-angle, $bg-color-1, $bg-color-2, $texture-number, $inverted) { $texture-list: 
+  "paper.png"             // Fabric and paper
+  "rice_paper.png"
+  "noise_lines.png"
+  "fabric_plaid.png"
+  "first_aid_kit.png"
+  "texturetastic_gray.png"
+  "lil_fiber.png"
+  "tex2res5.png"
+  "skin_side_up.png"
+  "light_noise_diagonal.png"
+  "chruch.png"
+  "45degreee_fabric.png"
+  "bgnoise_lg.png"
+  "little_pluses.png"
+  "squairy_light.png"
+  "white_texture.png"
+  "binding_light.png"
+  "double_lined.png"      // Grid, mesh and squares
+  "grid.png"
+  "absurdidad.png"
+  "grid_noise.png"
+  "fancy_deboss.png"
+  "graphy.png"
+  "noise_pattern_with_crosslines.png"
+  "old_mathematics.png"
+  "ps_neutral.png"
+  "subtle_freckles.png"
+  "wavegrid.png"
+  "az_subtle.png"
+  "tiny_grid.png"
+  "wavegrid.png"
+  "gridme.png"
+  "noisy_grid.png"
+  "subtlenet2.png"
+  "white_carbon.png"
+  "lghtmesh.png"
+  "p5.png"                 // Dots
+  "worn_dots.png"
+  "subtle_dots.png"
+  "brillant.png"
+  "farmer.png"
+  "retina_dust.png"        // Lines
+  "pinstripe.png"
+  "line_horizontal1.png"
+  "line_horizontal2.png"
+  "linen.png" 
+  "vintage_speckles.png"   // Patina and irregular
+  "subtle_grunge.png"
+  "old_wall.png"
+  "brushed.png"
+  "stucco.png"
+  "mooning.png"
+  "husk.png"
+  "concrete_wall_2.png"
+  "noisy.png"
+  "concrete_wall_3.png"
+  "subtle_surface.png"
+  "dust.png"
+  "light_alu.png"
+  "corrugation.png" 
+  "kindajean.png"           // Diagonal
+  "line_diagonal1.png"
+  "line_diagonal2.png"
+  "groovepaper.png"
+  "brushed_alu.png"
+  "rough_diagonal.png"
+  "diagonal-noise.png"
+  "cross_scratches.png"
+  "striped_lens.png"
+  "debut_light.png"
+  "diagonal_waves.png"    // Special
+  "honey_im_subtle.png"
+  "pw_maze_white.png"
+  "subtle_zebra_3d.png"
+  "white_wave.png"
+  "circles.png"
+  "crosses.png"
+  "grilled.png"
+  "pw_pattern.png"
+  "struckaxiom.png"
+  "vichy.png"
+  "wavecut.png"
+  "whitey.png"
+  "cream_pixels.png"
+  "grey.png"
+  "shinedotted.png"
+  "stacked_circles.png"
+  "noisy_grid_simple.png";
+
+  @if ($inverted == 1) {
+    @include background(url("https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/textures/#{nth($texture-list, $texture-number)}"), linear-gradient($gradient-angle, $bg-color-1, $bg-color-2), center no-repeat $bg-color-1 scroll);
+  }
+
+  @else {
+    @include background(url("https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/textures/inverted/#{nth($texture-list, $texture-number)}"), linear-gradient($gradient-angle, $bg-color-1, $bg-color-2), center no-repeat $bg-color-1 scroll);
+  }
+}
+
+// The mixin above should preferably be in a file of its own. Below is the code for the object that has the texture.
+
+.texture {
+  $texture-top-background: lighten(#ddf0ef, 1%);
+  $texture-bottom-background: darken(#ddf0ef, 10%);
+  height: 5em;
+  width: 100%;
+
+  .texture-normal {
+    // gradient color 1, gradient color 2, gradient angle, texture-number, 0=inverted or 1=normal  
+    @include texture(180deg, $texture-top-background, $texture-bottom-background, 67, 1); 
+    float: left;
+    height: 5em;
+    width: 50%;
+  }
+
+  .texture-inverted {
+    // gradient color 1, gradient color 2, gradient angle, texture-number, 0=inverted or 1=normal  
+    @include texture(180deg, $texture-top-background, $texture-bottom-background, 67, 0); 
+    float: left;
+    height: 5em;
+    width: 50%;
+  }
+}
+
+
+.tooltip-item {  
+  $base-border-color: gainsboro !default;
+  $base-border-radius: 3px !default;
+  $base-line-height: 1.5em !default;
+  $dark-gray: #333 !default;
+  $base-font-color: $dark-gray !default;  
+  $tooltip-background: white;
+  $tooltip-color: $base-font-color;
+  $tooltip-max-width: 16em;
+  $tooltip-arrow-width: 8px;
+  $tooltip-shadow: 0 2px 2px silver;
+  $tooltip-distance-from-item: 3em;
+  $tooltip-arrow-distance-from-box: -1.3em;
+
+  background: $tooltip-background;
+  border-radius: $base-border-radius;
+  border: 1px solid $base-border-color;
+  display: inline-block;
+  padding: 0.5em 1em;
+  position: relative;
+  text-align: center;
+
+  &:focus,
+  &:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .tooltip {
+    @include position(absolute, null 0 $tooltip-distance-from-item 0);
+    @include transition (all 0.2s ease-in-out);
+    background-color: $tooltip-background;
+    background: #fff;
+    border-radius: $base-border-radius;
+    box-shadow: $tooltip-shadow;
+    color: $tooltip-color;
+    font-size: 0.9em; // Make sure you use -webkit-backface-visibility: hidden; on the body element to prevent 1px nudging bugs.
+    line-height: 1.5em;
+    margin: 0 auto;
+    max-width: $tooltip-max-width;
+    opacity: 0;
+    padding: 1em;
+    text-align: center;
+    visibility: hidden;
+    z-index: 10;
+
+    p {
+      color: $base-font-color;
+      line-height: $base-line-height;
+      margin: 0;
+    }
+
+    &:after {
+      @include position(absolute, null 0 null 0);
+      border: $tooltip-arrow-width solid transparent;
+      bottom: $tooltip-arrow-distance-from-box;
+      color: $tooltip-background;
+      content: '▼';
+      font-size: 1.4em;
+      margin-left: -$tooltip-arrow-width;
+      text-align: center;
+      text-shadow: $tooltip-shadow;
+    }
+  }
+}
