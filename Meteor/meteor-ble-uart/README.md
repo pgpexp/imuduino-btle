@@ -6,7 +6,7 @@ If you encounter bugs, please consider creating an Issue request at https://gith
 
 This project should set up your machine to serve a web page on localhost:3000, where you can scan and connect to IMUduino boards wirelessly over Bluetooth Low Energy.
 
-Tested on Mac OSX with Bluetooth 4.0, and Ubuntu using Adafruit's Bluetooth 4.0 donge (and a few additional libraries).
+Tested on Mac OSX with Bluetooth 4.0, and Ubuntu using Adafruit's Bluetooth 4.0 dongle (and a few additional libraries).
 
 
 # Setup
