@@ -1,11 +1,63 @@
+Meteor BLE UART server
+======================
+Put together using various technologies. This example project was written by A. Albino (zrecommerce) for Femto.io
 
-# Mac OSX setup
-Install XCode
-Install nvm
-Run `nvm install node`
+If you encounter bugs, please consider creating an Issue request at https://github.com/femtoduino/imuduino-btle
+
+This project should set up your machine to serve a web page on localhost:3000, where you can scan and connect to IMUduino boards wirelessly over Bluetooth Low Energy.
+
+Tested on Mac OSX with Bluetooth 4.0, and Ubuntu using Adafruit's Bluetooth 4.0 donge (and a few additional libraries).
 
 
-Install meteor: `curl https://install.meteor.com/ | sh`
+# Setup
+
+## Mac OSX setup
+Install XCode. Then, install nvm.
+
+Run `nvm install node` to get node installed on your Mac without sudo.
+
+You should now install Meteor:
+```
+curl https://install.meteor.com/ | sh
+```
+
+
+## Ubuntu Setup
+
+Install nvm, then run `nvm install node` to get node installed on your Ubuntu machine without sudo.
+
+You should now install Meteor:
+```
+curl https://install.meteor.com/ | sh
+```
+
+See the Noble setup info. You will need hcitools, hciconfig, libbluetooth-dev, and bluez packages.
+https://github.com/sandeepmistry/noble#running-on-linux
+```
+sudo apt-get install bluetooth bluez-utils libbluetooth-dev
+```
+
+You will need a compatible Bluetooth 4.0 Dongle. 
+
+We strongly urge you to buy Adafruit's Bluetooth 4.0 dongle, as it works right out of the box with GNU/Linux. http://www.adafruit.com/products/1327
+
+
+# How to run
+
+Open up a terminal window, navigate to the `imuduino-btle/Meteor/meteor-ble-uart` directory, and run the following command:
+
+```
+meteor run
+```
+
+This will automatically download needed dependencies (including the Noble npm package), and start hosting at `http://localhost:3000`
+
+# Issues
+This project is still working out some minor issues with async callbacks under the hood.
+Try hitting CTRL+C to stop the meteor server (from your terminal where you started meteor), and starting it again: `meteor run`. Refresh your web page (`http://localhost:3000`)
+
+
+# New project setup notes, just as a reference
 
 
 Create the new meteor application.
