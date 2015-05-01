@@ -8,6 +8,9 @@ This project should set up your machine to serve a web page on localhost:3000, w
 
 Tested on Mac OSX with Bluetooth 4.0, and Ubuntu using Adafruit's Bluetooth 4.0 dongle (and a few additional libraries).
 
+Please load the IMUduino_Bluetooth_UART_YawPitchRoll example sketch on to your board to see the Meteor app display IMU Yaw, Pitch, and Roll values.
+
+(Uses Node 0.10.x)
 
 # Setup
 
@@ -21,6 +24,13 @@ You should now install Meteor:
 curl https://install.meteor.com/ | sh
 ```
 
+On mac, you may need the xpc-connection npm package as well.  Add it to packages.json:
+```
+{
+  "noble": "0.3.14",
+  "xpc-connection": "0.1.3"
+}
+```
 
 ## Ubuntu Setup
 
