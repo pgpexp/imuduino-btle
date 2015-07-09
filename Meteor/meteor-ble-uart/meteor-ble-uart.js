@@ -42,7 +42,7 @@ if (Meteor.isClient) {
       return status == 'connected';
     },
     yawpitchroll: function (uuid) {
-      return YawPitchRoll.find({}, {limit: 1, sort: {timestamp: -1}});
+      return YawPitchRoll.find({uuid:this.uuid}, {limit: 1, sort: {timestamp: -1}});
     }
   });
 
