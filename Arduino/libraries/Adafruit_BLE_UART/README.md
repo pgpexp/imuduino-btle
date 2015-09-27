@@ -38,8 +38,8 @@ Any data sent to the Arduino will be displayed in the Serial Monitor output, and
 This demo creates a custom UART service, with one characteristic for TX and one for RX using the following UUIDs:
 
 * 6E400001-B5A3-F393-E0A9-E50E24DCCA9E for the Service
-* 6E400002-B5A3-F393-E0A9-E50E24DCCA9E for the TX Characteristic (Property = Notify)
-* 6E400003-B5A3-F393-E0A9-E50E24DCCA9E for the RX Characteristic (Property = Write without response)
+* 6E400002-B5A3-F393-E0A9-E50E24DCCA9E for the RX Characteristic (Property = Notify)
+* 6E400003-B5A3-F393-E0A9-E50E24DCCA9E for the TX Characteristic (Property = Write without response)
 
 You can test the UART service with the free nRF UART apps from Nordic Semiconductors, available for both iOS and Android:
 
